@@ -427,29 +427,33 @@ void Adafruit_GFX::write(uint8_t c) {
 }
 
 // Draw a character
-void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
-			    uint16_t color, uint16_t bg, uint8_t size) {
-
-  if((x >= _width)            || // Clip right
+int Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
+                uint16_t color, uint16_t bg, uint8_t size) {
+   bool cropped = ((x >= _width)            || // Clip right
      (y >= _height)           || // Clip bottom
-     ((x + 6 * size - 1) < 0) || // Clip left
-     ((y + 8 * size - 1) < 0))   // Clip top
-    return;
+     ((x + (FONT_WIDTH + 1) * size - 1) < 0) || // Clip left
+     ((y + (FONT_HEIGHT + 1) * size - 1) < 0));   // Clip top
 
-  for (int8_t i=0; i<6; i++ ) {
+  int width = 0;
+  for (int8_t i=0; i<=FONT_WIDTH; i++ ) {
     uint8_t line;
-    if (i == 5) 
+    if (i == FONT_WIDTH)
       line = 0x0;
-    else 
-      line = pgm_read_byte(font+(c*5)+i);
-    for (int8_t j = 0; j<8; j++) {
+    else
+      line = pgm_read_byte(font+(c*FONT_WIDTH)+i);
+
+
+    for (int8_t j = 0; j<=HEIGHT; j++) {
       if (line & 0x1) {
-        if (size == 1) // default size
-          drawPixel(x+i, y+j, color);
-        else {  // big size
-          fillRect(x+(i*size), y+(j*size), size, size, color);
-        } 
-      } else if (bg != color) {
+        if (!cropped) {
+          if (size == 1) // default size
+            drawPixel(x+i, y+j, color);
+          else {  // big size
+            fillRect(x+(i*size), y+(j*size), size, size, color);
+          }
+        }
+        width = i + 1;
+      } else if (bg != color && !cropped) {
         if (size == 1) // default size
           drawPixel(x+i, y+j, bg);
         else {  // big size
@@ -459,6 +463,7 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
       line >>= 1;
     }
   }
+  return width;
 }
 
 void Adafruit_GFX::setCursor(int16_t x, int16_t y) {
@@ -517,4 +522,3 @@ int16_t Adafruit_GFX::height(void) const {
 void Adafruit_GFX::invertDisplay(boolean i) {
   // Do nothing, must be subclassed if supported
 }
-

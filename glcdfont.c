@@ -9,6 +9,8 @@
 #endif
  
 // Standard ASCII 5x7 font
+static const signed int FONT_WIDTH = 5;
+static const signed int FONT_HEIGHT = 7;
 
 static const unsigned char font[] PROGMEM = {
         0x00, 0x00, 0x00, 0x00, 0x00,   

@@ -50,17 +50,16 @@ class Adafruit_GFX : public Print {
       int16_t w, int16_t h, uint16_t color),
     drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
       int16_t w, int16_t h, uint16_t color, uint16_t bg),
-    drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, 
+    drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
       int16_t w, int16_t h, uint16_t color),
-    drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color,
-      uint16_t bg, uint8_t size),
     setCursor(int16_t x, int16_t y),
     setTextColor(uint16_t c),
     setTextColor(uint16_t c, uint16_t bg),
     setTextSize(uint8_t s),
     setTextWrap(boolean w),
     setRotation(uint8_t r);
-
+  int drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color,
+    uint16_t bg, uint8_t size);
 #if ARDUINO >= 100
   virtual size_t write(uint8_t);
 #else
